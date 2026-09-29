@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     MPI_Comm_rank(MPI_COMM_WORLD, &minodo);
 
     // ---------- Parametros (los lee el maestro y los reparte) ----------
-    long long n = 2000000000LL;          // 2 mil millones de subintervalos
+    long long n = 3000000000LL;          // 3 mil millones de subintervalos
     double ab[2] = {0.0, 1000.0};
 
     if (minodo == 0) {
@@ -55,12 +55,12 @@ int main(int argc, char **argv)
         if (argc > 2) ab[0] = std::atof(argv[2]);
         if (argc > 3) ab[1] = std::atof(argv[3]);
         if (n < 2) n = 2;
-        if (n % 2 != 0) n++;             // Simpson necesita n par
+        if (n % 2 != 0) n++;
     }
     MPI_Bcast(&n, 1, MPI_LONG_LONG, 0, MPI_COMM_WORLD);
     MPI_Bcast(ab, 2, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-    // ---------- Quien es quien (para verificar que si hay N nodos) ----------
+    // ---------- Quien es quien ----------
     char nombre[MPI_MAX_PROCESSOR_NAME];
     std::memset(nombre, 0, sizeof(nombre));
     int largo;
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
     char *nombres = NULL;
     if (minodo == 0) nombres = new char[totalnodos * MPI_MAX_PROCESSOR_NAME];
     MPI_Gather(nombre, MPI_MAX_PROCESSOR_NAME, MPI_CHAR,
-               nombres, MPI_MAX_PROCESSOR_NAME, MPI_CHAR, 0, MPI_COMM_WORLD);
+            nombres, MPI_MAX_PROCESSOR_NAME, MPI_CHAR, 0, MPI_COMM_WORLD);
 
     // ---------- Inicio de la medicion ----------
     MPI_Barrier(MPI_COMM_WORLD);
@@ -116,35 +116,35 @@ int main(int argc, char **argv)
             distintos.insert(std::string(&nombres[r * MPI_MAX_PROCESSOR_NAME]));
 
         std::cout << "==============================================\n"
-                  << " Area bajo la curva con MPI (Simpson 1/3)\n"
-                  << " f(x) = x(2 + sen x) + 100 e^(-x/100)\n"
-                  << "==============================================\n";
+        << " Area bajo la curva con MPI (Simpson 1/3)\n"
+        << " f(x) = x(2 + sen x) + 100 e^(-x/100)\n"
+        << "==============================================\n";
         std::cout << std::fixed << std::setprecision(2)
-                  << " Intervalo            : [" << a << ", " << b << "]\n";
+                << " Intervalo            : [" << a << ", " << b << "]\n";
         std::cout << " Subintervalos (n)    : " << n << "\n"
-                  << " Procesos MPI         : " << totalnodos << "\n"
-                  << " Nodos distintos      : " << distintos.size() << "\n";
+                << " Procesos MPI         : " << totalnodos << "\n"
+                << " Nodos distintos      : " << distintos.size() << "\n";
         for (int r = 0; r < totalnodos; ++r)
             std::cout << "    proceso " << r << " -> "
                       << &nombres[r * MPI_MAX_PROCESSOR_NAME] << "\n";
 
         std::cout << std::setprecision(8)
-                  << " Area calculada       : " << area   << "\n"
-                  << " Area exacta          : " << exacta << "\n";
+                << " Area calculada       : " << area   << "\n"
+                << " Area exacta          : " << exacta << "\n";
         std::cout << std::scientific << std::setprecision(3)
-                  << " Error relativo       : " << err << "\n";
+                << " Error relativo       : " << err << "\n";
         std::cout << std::fixed << std::setprecision(4)
-                  << " Tiempo total (s)     : " << t_total << "\n"
-                  << " Calculo mas lento (s): " << tc_max  << "\n"
-                  << " Calculo mas rapido(s): " << tc_min  << "\n"
-                  << "==============================================\n";
+                << " Tiempo total (s)     : " << t_total << "\n"
+                << " Calculo mas lento (s): " << tc_max  << "\n"
+                << " Calculo mas rapido(s): " << tc_min  << "\n"
+                << "==============================================\n";
 
         // procesos,nodos_distintos,n,area,error_rel,t_total,t_calc_max,t_calc_min
         std::cout << "CSV," << totalnodos << "," << distintos.size() << "," << n << ","
-                  << std::setprecision(8) << area << ","
-                  << std::scientific << std::setprecision(3) << err << ","
-                  << std::fixed << std::setprecision(6)
-                  << t_total << "," << tc_max << "," << tc_min << std::endl;
+                << std::setprecision(8) << area << ","
+                << std::scientific << std::setprecision(3) << err << ","
+                << std::fixed << std::setprecision(6)
+                << t_total << "," << tc_max << "," << tc_min << std::endl;
 
         delete[] nombres;
     }
