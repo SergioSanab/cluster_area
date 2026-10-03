@@ -94,16 +94,16 @@ int main(int argc, char **argv)
     // ---------- Recoleccion ----------
     double suma_total = 0.0, tc_max = 0.0, tc_min = 0.0;
     MPI_Reduce(&suma_local, &suma_total, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&t_calculo,  &tc_max,     1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&t_calculo,  &tc_min,     1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&t_calculo, &tc_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&t_calculo, &tc_min, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
 
     double t_total = MPI_Wtime() - t_inicio;
 
-    // ---------- Reporte (solo el maestro) ----------
+    // ---------- Reporte ----------
     if (minodo == 0) {
-        double area   = suma_total * h / 3.0;
+        double area = suma_total * h / 3.0;
         double exacta = F(b) - F(a);
-        double err    = std::fabs(area - exacta) / std::fabs(exacta);
+        double err = std::fabs(area - exacta) / std::fabs(exacta);
 
         std::set<std::string> distintos;
         for (int r = 0; r < totalnodos; ++r)
