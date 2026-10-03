@@ -1,6 +1,6 @@
 // =====================================================================
 //  area_simpson.cpp  -  Area bajo la curva en paralelo con MPI
-//  Regla de Simpson 1/3 compuesta
+//  Regla de Simpson 1/3 compuesta, no utilizamos trapecio para agregar complejidad 
 //
 //      f(x) = x * (2 + sen(x)) + 100 * e^(-x/100)       en [a, b]
 //
@@ -11,12 +11,6 @@
 //      F(x) = x^2 + sen(x) - x*cos(x) - 10000 * e^(-x/100)
 //
 //  Por defecto integra en [0, 1000]  ->  area aprox. 1.01 millones u^2
-//
-//  Uso:
-//      mpirun -np P --hostfile hosts ./area_simpson [n] [a] [b]
-//      n = numero de subintervalos (si es impar se sube al par siguiente)
-//
-//  Salida: bloque legible + una ultima linea "CSV,..." que leen los scripts.
 // =====================================================================
 
 #include <iostream>

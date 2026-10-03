@@ -9,8 +9,8 @@
 #     ./correr_experimento.sh 1          # 10 corridas solo con el maestro
 #     ./correr_experimento.sh 3          # 10 corridas con maestro + 2 esclavos
 #
-# Variables opcionales (ponlas delante del comando):
-#     N=2000000000   subintervalos (usa el que te dio calibrar.sh, el MISMO en todo)
+# Variables opcionales :
+#     N=2000000000   subintervalos
 #     PPN=1          procesos MPI por nodo (el MISMO en todo el experimento)
 #     CALENTAR=1     hace 1 corrida previa que NO se guarda (0 para omitirla)
 #     EXTRA_MPI=""   opciones adicionales para mpirun
