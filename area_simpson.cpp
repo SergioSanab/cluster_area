@@ -37,8 +37,8 @@ int main(int argc, char **argv)
     MPI_Init(&argc, &argv);
 
     int minodo, totalnodos;
-    MPI_Comm_size(MPI_COMM_WORLD, &totalnodos);
-    MPI_Comm_rank(MPI_COMM_WORLD, &minodo);
+    MPI_Comm_size(MPI_COMM_WORLD, &totalnodos); //identifica los procesos
+    MPI_Comm_rank(MPI_COMM_WORLD, &minodo); // identifica el nodo
 
     // ---------- Parametros (los lee el maestro y los reparte) ----------
     long long n = 3000000000LL;          // 3 mil millones de subintervalos
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
         if (n < 2) n = 2;
         if (n % 2 != 0) n++;
     }
-    MPI_Bcast(&n, 1, MPI_LONG_LONG, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&n, 1, MPI_LONG_LONG, 0, MPI_COMM_WORLD);//
     MPI_Bcast(ab, 2, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
     // ---------- Quien es quien ----------
